@@ -11,6 +11,15 @@ const ProductCard = () => {
   const [cartList, setCartList] = useState([]);
   const [showCart, setShowCart] = useState(false);
 
+  const total = cartList.reduce((acc, item) => acc + item.price, 0).toFixed(2);
+  const totalDiscount = 10;
+  const totalPrice = (
+    total -
+    totalDiscount +
+    3 +
+    (total > 100 ? 0 : 10)
+  ).toFixed(2);
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -33,7 +42,7 @@ const ProductCard = () => {
 
   const handleAddToCart = (product) => {
     if (cartList.find((item) => item.id === product.id)) {
-      alert("Product already in cart");
+      alert("Product already added to cart");
       return;
     }
     setCartList((prev) => [...prev, product]);
@@ -87,6 +96,49 @@ const ProductCard = () => {
               </div>
             ) : (
               <p className="text-center text-xl">No Products Found</p>
+            )}
+
+            {cartList.length > 0 && (
+              <div className="bg-gray-200 p-6 mt-6 rounded-lg shadow-lg max-w-md mx-auto">
+                <h3 className="text-xl font-bold mb-2 text-center">
+                  Cart Summary
+                </h3>
+
+                <div className="flex justify-between">
+                  <span>Price ({cartList.length} item)</span>
+                  <span>${total}</span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span>Discount</span>
+                  <span>-${totalDiscount}</span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span>Platform Fee</span>
+                  <span>+$3</span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span>Delivery Charges</span>
+                  <span>
+                    {total > 100 ? (
+                      <div>
+                        <del>$10</del> Free
+                      </div>
+                    ) : (
+                      "$10"
+                    )}
+                  </span>
+                </div>
+
+                <hr className="my-4" />
+
+                <div className="flex justify-between font-bold text-xl">
+                  <span>Total Amount</span>
+                  <span>${totalPrice}</span>
+                </div>
+              </div>
             )}
 
             <div className="flex justify-center mt-4">
